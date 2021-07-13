@@ -1,2 +1,0 @@
-# bayeslinear
-bayeslinear
