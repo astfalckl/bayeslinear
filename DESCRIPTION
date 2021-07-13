@@ -1,15 +1,14 @@
 Package: bayeslinear
-Title: What the Package Does (One Line, Title Case)
+Title: Bayes linear analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Lachlan",
+           family = "Astfalck",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "L.Astfalck@leeds.ac.uk",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: Helper functions for Bayes linear analysis.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
