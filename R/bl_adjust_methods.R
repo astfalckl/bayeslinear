@@ -7,10 +7,12 @@
 
 # ------------------------------------------------------------------------------
 
+#' @export
 print.bl_adjust <- function(object){
   utils::str(object)
 }
 
+#' @export
 adjust <- function(obj, ...) {
   UseMethod("adjust")
 }

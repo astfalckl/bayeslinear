@@ -27,6 +27,7 @@ bl <- function(exp_X, exp_D, cov_XD, var_X, var_D){
 
 }
 
+#' @export
 new_bl_output <- function(exp_X, exp_D, cov_XD, var_X, var_D){
   structure(
     list(
@@ -42,10 +43,12 @@ new_bl_output <- function(exp_X, exp_D, cov_XD, var_X, var_D){
   )
 }
 
+#' @export
 print.bl <- function(object){
   utils::str(object)
 }
 
+#' @export
 adjust <- function(obj, ...) {
   UseMethod("adjust")
 }

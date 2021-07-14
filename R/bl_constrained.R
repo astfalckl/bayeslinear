@@ -11,14 +11,17 @@
 #   utils::str(object)
 # }
 
+#' @export
 adjust_constrained <- function(obj, ...) {
   UseMethod("adjust_constrained")
 }
 
+#' @export
 print.bl_constrained <- function(object){
   utils::str(object)
 }
 
+#' @export
 norm_distance <- function(
   X, adj_exp, adj_var
 ){
