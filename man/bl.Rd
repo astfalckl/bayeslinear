@@ -7,15 +7,15 @@
 bl(exp_X, exp_D, cov_XD, var_X, var_D)
 }
 \arguments{
-\item{exp_X}{matrix}
+\item{exp_X}{Prior expectation of X}
 
-\item{exp_D}{matrix}
+\item{exp_D}{Prior expectation of D}
 
-\item{cov_XD}{matrix}
+\item{cov_XD}{Prior covariance of X and D}
 
-\item{var_X}{matrix}
+\item{var_X}{Prior variance of X}
 
-\item{var_D}{matrix}
+\item{var_D}{Prior variance of D}
 }
 \value{
 Returns a bl object

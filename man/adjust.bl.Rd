@@ -2,26 +2,18 @@
 % Please edit documentation in R/update.R
 \name{adjust.bl}
 \alias{adjust.bl}
-\title{Bayes linear update function}
+\title{Adjust a bl object with observed data}
 \usage{
-adjust.bl(exp_X, exp_D, cov_XD, var_X, var_D, D)
+\method{adjust}{bl}(bl_obj, D)
 }
 \arguments{
-\item{exp_X}{matrix}
+\item{bl_obj}{A bl object}
 
-\item{exp_D}{matrix}
-
-\item{cov_XD}{matrix}
-
-\item{var_X}{matrix}
-
-\item{var_D}{matrix}
-
-\item{D}{matrix}
+\item{D}{A matrix of observed data}
 }
 \value{
-list
+Returns a
 }
 \description{
-Bayes linear update function
+Adjust a bl object with observed data
 }
