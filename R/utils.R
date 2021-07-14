@@ -5,6 +5,4 @@
 #'
 #' @return A MP generalized inverse matrix for X.
 #' @export
-#'
-#' @examples
 inv <- function(...) MASS::ginv(...)

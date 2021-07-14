@@ -24,7 +24,6 @@ adjust <- function(obj, ...) {
 #' @return Returns a bl_adjust object
 #' @export
 #'
-#' @examples
 adjust.bl_adjust <- function(
 	bl_obj, 
 	D, 

@@ -31,7 +31,6 @@ norm_distance <- function(
 #' @param constraint A list of constraints to be passed to CVXR
 #' @return Returns a bl_adjust object
 #' @export
-#' @examples 
 adjust_constrained.bl <- function(
 	bl_obj, 
 	D, 
@@ -59,9 +58,6 @@ adjust_constrained.bl <- function(
 
 	bl_obj$D <- D
 	bl_obj$adjusted_exp <- result[[1]]
-
-	# bl_obj$adjusted_var <- adj_var
-	# bl_obj$resolved_var <- bl_obj$var_X - adj_var
 	
 	class(bl_obj) <- "bl_constrained"
 

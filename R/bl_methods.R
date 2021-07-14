@@ -21,8 +21,6 @@
 #'
 #' @return Returns a bl object
 #' @export
-#'
-#' @examples
 bl <- function(exp_X, exp_D, cov_XD, var_X, var_D){
 
   new_bl_output(exp_X, exp_D, cov_XD, var_X, var_D)
@@ -59,8 +57,6 @@ adjust <- function(obj, ...) {
 #'
 #' @return Returns a bl_adjust object
 #' @export
-#'
-#' @examples
 adjust.bl <- function(bl_obj, D){
 
 	D <- as.matrix(D)
