@@ -2,5 +2,6 @@
 
 S3method(adjust,bl)
 S3method(adjust,bl_adjust)
+S3method(adjust_constrained,bl)
 export(bl)
 export(inv)
