@@ -1,13 +1,13 @@
 Package: bayeslinear
-Title: Bayes linear analysis
+Title: Bayes linear analysis in R
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Lachlan",
            family = "Astfalck",
            role = c("aut", "cre"),
-           email = "L.Astfalck@leeds.ac.uk",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Helper functions for Bayes linear analysis.
+           email = "lachlan.astfalck@uwa.edu.au",
+           comment = c(ORCID = "0000-0002-8369-9384"))
+Description: Calculations for Bayes linear analysis. Incorporates all the functionality of traditional Bayes linear analysis, and some more recent developments. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
