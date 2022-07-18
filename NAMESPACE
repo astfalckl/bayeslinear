@@ -2,4 +2,7 @@
 
 export(adjust)
 export(bs)
+export(gbl_bs)
+export(gbl_distance)
 export(inv)
+export(solve_constrained_expectation)

@@ -4,17 +4,17 @@
 \alias{adjust}
 \title{Adjust either a belief structure or adjusted belief structure with observed data}
 \usage{
-adjust(bs_obj, D, ...)
+adjust(obj, D, ...)
 }
 \arguments{
-\item{bs_obj}{A belief structure}
+\item{obj}{A belief structure}
 
 \item{D}{A matrix of observed data}
 
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-Returns a adjusted belief structure (adj_bs) object
+Returns a adjusted belief structure (\code{adj_bs}) object
 }
 \description{
 Adjust either a belief structure or adjusted belief structure with observed data

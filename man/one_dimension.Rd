@@ -3,7 +3,7 @@
 \docType{data}
 \name{one_dimension}
 \alias{one_dimension}
-\title{One-dimensional example}
+\title{One Dimensional Example}
 \format{
 An object with class \code{bs}
 }

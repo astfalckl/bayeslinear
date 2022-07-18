@@ -15,6 +15,6 @@ Vol. 716. John Wiley & Sons, 2007.
 oral_glucose
 }
 \description{
-A belief structure object of the oral glucose problem from `Bayes Linear Statistics'.
+A belief structure object of the oral glucwose problem from `Bayes Linear Statistics'.
 }
 \keyword{datasets}

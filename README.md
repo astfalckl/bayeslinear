@@ -34,9 +34,6 @@ fully specify the inner product space. The methods in
 object through <tt>bs()</tt>. For example the one-dimensional example in
 Goldstein and Wooff (2007) is created as
 
-    #> Loading required package: usethis
-    #> ℹ Loading bayeslinear
-
 ``` r
 E_X <- 1
 E_D <- 2
@@ -46,15 +43,15 @@ cov_XD <- 0.6
 
 one_dimension <- bs(E_X, E_D, cov_XD, var_X, var_D)
 print(one_dimension)
-#> List of 7
+#> List of 5
 #>  $ E_X   : num [1, 1] 1
 #>  $ E_D   : num [1, 1] 2
 #>  $ cov_XD: num [1, 1] 0.6
 #>  $ var_X : num [1, 1] 1
 #>  $ var_D : num [1, 1] 1
-#>  $ n_X   : int 1
-#>  $ n_D   : int 1
 #>  - attr(*, "class")= chr "bs"
+#>  - attr(*, "nx")= int 1
+#>  - attr(*, "nd")= int 1
 ```
 
 ## Adjusting Belief Structures
@@ -66,13 +63,11 @@ returned.
 ``` r
 D <- 0
 adjust(one_dimension, D)
-#> List of 7
+#> List of 3
 #>  $ E_adj  : num [1, 1] -0.2
-#>  $ E_D    : num [1, 1] 2
 #>  $ var_adj: num [1, 1] 0.64
-#>  $ var_D  : num [1, 1] 1
 #>  $ D      : num [1, 1] 0
-#>  $ n_X    : int 1
-#>  $ n_D    : int 1
 #>  - attr(*, "class")= chr "adj_bs"
+#>  - attr(*, "nx")= int 1
+#>  - attr(*, "nd")= int 1
 ```

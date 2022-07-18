@@ -2,7 +2,7 @@
 % Please edit documentation in R/bl_methods.R
 \name{bs}
 \alias{bs}
-\title{Crate a belief structure}
+\title{Create a belief structure}
 \usage{
 bs(E_X, E_D, cov_XD, var_X, var_D)
 }
@@ -18,8 +18,8 @@ bs(E_X, E_D, cov_XD, var_X, var_D)
 \item{var_D}{Prior variance of D}
 }
 \value{
-Returns a belief structure (bs) object
+Returns a belief structure (\code{bs}) object
 }
 \description{
-Crate a belief structure
+Create a belief structure
 }
