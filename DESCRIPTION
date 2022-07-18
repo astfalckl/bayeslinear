@@ -20,3 +20,5 @@ Imports:
     utils,
     MASS,
     CVXR
+Depends: 
+    R (>= 2.10)

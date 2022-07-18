@@ -6,55 +6,82 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-<tt> bayeslinear </tt>\> provides tools to perform Bayes Linear
-statistics.
+<tt> bayeslinear </tt> provides tools to perform a Bayes Linear
+analysis.
 
 ## Installation
 
 <!-- You can install the released version of bayeslinear from [CRAN](https://CRAN.R-project.org) with:
-
 ``` r
 install.packages("bayeslinear")
 ``` -->
 
-is currently in development; install the latest version from
-[GitHub](https://github.com/) with:
+<tt> bayeslinear </tt> is currently in development; install the latest
+version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("astfalckl/bayeslinear")
 ```
 
-## Adjusting Beliefs
+## Creating Belief Structures
+
+A belief structure is the fundamental unit of information that we
+require to conduct a BL analysis blah blah blah. It requires the
+specification of 𝔼(*X*), 𝔼(*D*), var(*X*), var(*D*) and cov(*X*,*D*) to
+fully specify the inner product space. The methods in <tt> bayeslinear
+</tt> are based on the creation of a belief structure object through
+<tt> bs() </tt>. For example the one-dimensional example in Goldstein
+and Wooff (2007) is created as
 
 ``` r
 library(bayeslinear)
-## basic example code
+
+E_X <- 1
+E_D <- 2
+
+var_X <- var_D <- 1
+cov_XD <- 0.6
+
+one_dimension <- bs(E_X, E_D, cov_XD, var_X, var_D)
+print(one_dimension)
+#> $E_X
+#>      [,1]
+#> [1,]    1
+#> 
+#> $E_D
+#>      [,1]
+#> [1,]    2
+#> 
+#> $cov_XD
+#>      [,1]
+#> [1,]  0.6
+#> 
+#> $var_X
+#>      [,1]
+#> [1,]    1
+#> 
+#> $var_D
+#>      [,1]
+#> [1,]    1
+#> 
+#> $n_X
+#> NULL
+#> 
+#> $n_D
+#> [1] 1
+#> 
+#> attr(,"class")
+#> [1] "bs"
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Adjusting Belief Structures
+
+A <tt> bs </tt> object is adjusted by some data <tt> D </tt> via the
+<tt> adjust </tt> method. An adjusted belief structure <tt> adj_bs </tt>
+is returned.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+D <- 0
+# adjust(one_dimension, D)
 ```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.

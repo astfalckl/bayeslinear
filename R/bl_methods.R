@@ -1,10 +1,4 @@
 
-# ------------------------------------------------------------------------------
-# ------------------------------------ TODO ------------------------------------
-# ------------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------------
-
 #' Crate a belief structure
 #'
 #' @param E_X Prior expectation of X
@@ -17,8 +11,6 @@
 #' @export
 bs <- function(E_X, E_D, cov_XD, var_X, var_D){
 
-  # new_bs_output(E_X, E_D, cov_XD, var_X, var_D)
-
   structure(
     list(
 			E_X = as.matrix(E_X),
@@ -27,34 +19,12 @@ bs <- function(E_X, E_D, cov_XD, var_X, var_D){
 			var_X = as.matrix(var_X),
 			var_D = as.matrix(var_D),
 			n_X = nrow(E_X),
-			n_D = nrow(E_D)
+			n_D = nrow(as.matrix(E_D))
 		),
     class = "bs"
   )
 
 }
-
-# #' @export
-# new_bs_output <- function(E_X, E_D, cov_XD, var_X, var_D){
-  
-# }
-
-# #' @export
-# new_adj_bs_output <- function(E_adj, E_D, cov_adj, var_adj, var_D, D){
-#   structure(
-#     list(
-# 			E_adj = as.matrix(E_adj),
-# 			E_D = as.matrix(E_D),
-# 			cov_adj = as.matrix(cov_adj),
-# 			var_adj = as.matrix(var_adj),
-# 			var_D = as.matrix(var_D),
-# 			D = list(D),
-# 			n_X = nrow(E_adj),
-# 			n_D = nrow(E_D)
-# 		),
-#     class = "adj_bs"
-#   )
-# }
 
 print.bs <- function(x, ...){
   utils::str(x)
@@ -89,10 +59,9 @@ adjust.bs <- function(bs_obj, D, ...){
     list(
 			E_adj = as.matrix(E_adj),
 			E_D = as.matrix(bs_obj$E_D),
-			# cov_adj = as.matrix(cov_adj),
 			var_adj = as.matrix(var_adj),
 			var_D = as.matrix(bs_obj$var_D),
-			D = list(D),
+			D = as.matrix(D),
 			n_X = nrow(E_adj),
 			n_D = nrow(bs_obj$E_D)
 		),
@@ -100,20 +69,6 @@ adjust.bs <- function(bs_obj, D, ...){
   )
 
 	return(adj_bs_obj)
-
-	# bs_obj$D <- D
-	# bs_obj$adj_exp <- E_adj
-	# bs_obj$adj_var <- var_adj
-	# # ADJUSTED COVARIANCE
-	# bs_obj$res_var <- bs_obj$var_X - var_adj
-
-	# if (bs_obj$n_X == 1) {
-	# 	bs_obj$resolution <- 1 - diag(adj_var)/diag(bs_obj$var_X)
-	# } else {
-	# 	bs_obj$resolution <- diag(1 - diag(diag(adj_var))/diag(diag(bs_obj$var_X)))	
-	# }
-	
-	# class(bs_obj) <- "adj_bs"
 
 }
 

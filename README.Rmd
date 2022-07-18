@@ -18,43 +18,48 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-<tt> bayeslinear </tt>> provides tools to perform Bayes Linear statistics.
+<tt> bayeslinear </tt> provides tools to perform a Bayes Linear analysis.
 
 ## Installation
 
 <!-- You can install the released version of bayeslinear from [CRAN](https://CRAN.R-project.org) with:
-
 ``` r
 install.packages("bayeslinear")
 ``` -->
 
-\texttt{bayeslinear} is currently in development; install the latest version from [GitHub](https://github.com/) with:
+<tt> bayeslinear </tt> is currently in development; install the latest version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("astfalckl/bayeslinear")
 ```
-## Adjusting Beliefs
+## Creating Belief Structures
 
+A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt> bayeslinear </tt> are based on the creation of a belief structure object through <tt> bs() </tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
 
-
-```{r example}
+```{r}
 library(bayeslinear)
-## basic example code
+
+E_X <- 1
+E_D <- 2
+
+var_X <- var_D <- 1
+cov_XD <- 0.6
+
+one_dimension <- bs(E_X, E_D, cov_XD, var_X, var_D)
+print(one_dimension)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+## Adjusting Belief Structures
 
-```{r cars}
-summary(cars)
+A <tt> bs </tt> object is adjusted by some data <tt> D </tt> via the <tt> adjust </tt> method. An adjusted belief structure <tt> adj_bs </tt> is returned. 
+
+```{r}
+D <- 0
+# adjust(one_dimension, D)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
 
-You can also embed plots, for example:
 
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
