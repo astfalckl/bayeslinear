@@ -4,30 +4,27 @@
 # bayeslinear
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-The goal of bayeslinear is to …
+provides tools to perform Bayes Linear statistics.
 
 ## Installation
 
-You can install the released version of bayeslinear from
-[CRAN](https://CRAN.R-project.org) with:
+<!-- You can install the released version of bayeslinear from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("bayeslinear")
-```
+``` -->
 
-And the development version from [GitHub](https://github.com/) with:
+is currently in development; install the latest version from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("astfalckl/bayeslinear")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Adjusting Beliefs
 
 ``` r
 library(bayeslinear)
