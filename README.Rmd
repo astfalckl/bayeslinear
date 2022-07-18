@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-<tt> bayeslinear </tt> provides tools to perform a Bayes Linear analysis.
+<tt>bayeslinear</tt> provides tools to perform a Bayes Linear analysis.
 
 ## Installation
 
@@ -27,19 +27,25 @@ knitr::opts_chunk$set(
 install.packages("bayeslinear")
 ``` -->
 
-<tt> bayeslinear </tt> is currently in development; install the latest version from [GitHub](https://github.com/) with:
+<tt>bayeslinear</tt> is currently in development; install the latest version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("astfalckl/bayeslinear")
+library(bayeslinear)
 ```
 ## Creating Belief Structures
 
-A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt> bayeslinear </tt> are based on the creation of a belief structure object through <tt> bs() </tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
+A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt>bayeslinear</tt> are based on the creation of a belief structure object through <tt>bs()</tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
+
+```{r, echo = FALSE}
+setwd("/Users/lachlan/Documents/PostDoc/9_packages/bayeslinear")
+library(devtools)
+load_all()
+
+```
 
 ```{r}
-library(bayeslinear)
-
 E_X <- 1
 E_D <- 2
 
@@ -52,11 +58,11 @@ print(one_dimension)
 
 ## Adjusting Belief Structures
 
-A <tt> bs </tt> object is adjusted by some data <tt> D </tt> via the <tt> adjust </tt> method. An adjusted belief structure <tt> adj_bs </tt> is returned. 
+A <tt>bs</tt> object is adjusted by some data <tt>D</tt> via the <tt>adjust</tt> method. An adjusted belief structure <tt>adj_bs</tt> is returned. 
 
 ```{r}
 D <- 0
-# adjust(one_dimension, D)
+adjust(one_dimension, D)
 ```
 
 
