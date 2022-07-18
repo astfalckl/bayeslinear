@@ -6,7 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-provides tools to perform Bayes Linear statistics.
+<tt> bayeslinear </tt>\> provides tools to perform Bayes Linear
+statistics.
 
 ## Installation
 
