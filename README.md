@@ -34,11 +34,8 @@ fully specify the inner product space. The methods in
 object through <tt>bs()</tt>. For example the one-dimensional example in
 Goldstein and Wooff (2007) is created as
 
-    #> Warning: package 'devtools' was built under R version 3.6.2
     #> Loading required package: usethis
-    #> Warning: package 'usethis' was built under R version 3.6.2
     #> ℹ Loading bayeslinear
-    #> Warning: package 'testthat' was built under R version 3.6.2
 
 ``` r
 E_X <- 1
@@ -55,7 +52,7 @@ print(one_dimension)
 #>  $ cov_XD: num [1, 1] 0.6
 #>  $ var_X : num [1, 1] 1
 #>  $ var_D : num [1, 1] 1
-#>  $ n_X   : NULL
+#>  $ n_X   : int 1
 #>  $ n_D   : int 1
 #>  - attr(*, "class")= chr "bs"
 ```

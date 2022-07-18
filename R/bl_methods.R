@@ -18,7 +18,7 @@ bs <- function(E_X, E_D, cov_XD, var_X, var_D){
 			cov_XD = as.matrix(cov_XD),
 			var_X = as.matrix(var_X),
 			var_D = as.matrix(var_D),
-			n_X = nrow(E_X),
+			n_X = nrow(as.matrix(E_X)),
 			n_D = nrow(as.matrix(E_D))
 		),
     class = "bs"
