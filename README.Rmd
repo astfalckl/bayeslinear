@@ -206,6 +206,13 @@ ggplot(cdiac, aes(x = year, y = annual)) +
 
 ```
 
+### The boring stuff
+
+```{r}
+sessionInfo()
+
+```
+
 
 
 
