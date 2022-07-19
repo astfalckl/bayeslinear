@@ -103,6 +103,13 @@ resolution <- function(obj, ...) {
   UseMethod("resolution")
 }
 
+resolution.bs <- function(obj, ...){
+	var_X <- obj$var_X
+	Rvar <- obj$cov_XD %*% inv(obj$var_D) %*% t(obj$cov_XD)
+
+	diag(Rvar)/diag(var_X)
+}
+
 resolution.adj_bs <- function(obj, ...){
 	var_X <- obj$prior$var_X
 	Rvar <- obj$Rvar
@@ -111,9 +118,10 @@ resolution.adj_bs <- function(obj, ...){
 }
 
 # Add this back in if/when we ever need it
-#' Calculates the canonical directions and resolutions of an adjusted belief structure
+#' Calculates the canonical directions and resolutions of either a belief structure or an adjusted belief structure
 #'
-#' @inheritParams resolution
+#' @param obj Either a \code{bs} or an \code{adj_bs} object
+#' @inheritParams adjust
 #'
 #' @return Returns a list of resolution matrix, canonical directions, and canonical resolutions. 
 #' Note, the symmetric resolution matrix is used herein.
@@ -122,7 +130,33 @@ canonical <- function(obj, ...) {
   UseMethod("canonical")
 }
 
+canonical.bs <- function(obj, ...){
+
+	var_X <- obj$var_X
+	Rvar <- obj$cov_XD %*% inv(obj$var_D) %*% t(obj$cov_XD)
+
+	Td <- solve(var_X) %*% Rvar
+
+	r <- eigen(Td)$values
+	E <- eigen(Td)$vectors
+
+	scales <- 1/sqrt(diag(t(E) %*% var_X %*% E))
+	W <- diag(scales) %*% t(E)
+	E_W <- - W %*% obj$E_X
+
+	return(
+		list(
+			resolutions = r,
+			resolution_matrix = Td,
+			directions = t(W),
+			directions_prior = E_W,
+			system_resolution = mean(r)
+		)
+	)
+}
+
 canonical.adj_bs <- function(obj, ...){
+
 	var_X <- obj$prior$var_X
 	Rvar <- obj$Rvar
 

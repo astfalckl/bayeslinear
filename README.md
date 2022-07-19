@@ -87,17 +87,14 @@ adjust(one_dimension, D)
 ## Summaries of Adjusted Belief Structures
 
 Methods for calculating the adjustment resolutions and performing a
-canonical analysis on a <tt>adj_bs</tt> object are <tt>resolution</tt>
-and <tt>canonical</tt>. For example, calculated on the oral glucose data
-(this belief structure ships with the package).
+canonical analysis on either a <tt>bs</tt> or an <tt>adj_bs</tt> object
+are <tt>resolution</tt> and <tt>canonical</tt>. For example, calculated
+on the oral glucose data (this belief structure ships with the package).
 
 ``` r
-D <- matrix(c(0,0))
-og_adjust <- adjust(oral_glucose, D)
-
-resolution(og_adjust)
+resolution(oral_glucose)
 #> [1] 0.3108514 0.0448334
-canonical(og_adjust)
+canonical(oral_glucose)
 #> $resolutions
 #> [1] 0.31842089 0.02017772
 #> 

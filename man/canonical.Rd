@@ -2,12 +2,12 @@
 % Please edit documentation in R/bl_methods.R
 \name{canonical}
 \alias{canonical}
-\title{Calculates the canonical directions and resolutions of an adjusted belief structure}
+\title{Calculates the canonical directions and resolutions of either a belief structure or an adjusted belief structure}
 \usage{
 canonical(obj, ...)
 }
 \arguments{
-\item{obj}{An adjusted belief structure object}
+\item{obj}{Either a \code{bs} or an \code{adj_bs} object}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -16,5 +16,5 @@ Returns a list of resolution matrix, canonical directions, and canonical resolut
 Note, the symmetric resolution matrix is used herein.
 }
 \description{
-Calculates the canonical directions and resolutions of an adjusted belief structure
+Calculates the canonical directions and resolutions of either a belief structure or an adjusted belief structure
 }
