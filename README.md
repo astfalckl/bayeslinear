@@ -166,7 +166,6 @@ linear with a few extra outputs.
 ``` r
 D <- c(-3)
 bivar_adjust <- adjust(gbl_bivar, D)
-#> [1] 2
 bivar_adjust
 #> List of 5
 #>  $ Ec_adj  : num [1:2, 1] -1.38e-21 1.23
@@ -221,7 +220,6 @@ gbl_bivar <- gbl_bs(
 )
 
 temp_const_adjust <- adjust(gbl_bivar, D)
-#> [1] 166
 ```
 
 The GBL inference is shown in blue.

@@ -127,8 +127,6 @@ cantelli <- function(S){
 #' @export
 solve_constrained_expectation <- function(E_adj, var_adj, constraint){
 
-    print(nrow(E_adj))
-
     Ec_adj <- CVXR::Variable(nrow(E_adj))
 
     objective <- CVXR::Minimize(
