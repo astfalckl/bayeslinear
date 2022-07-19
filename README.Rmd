@@ -44,6 +44,10 @@ A belief structure is the fundamental unit of information that we require to con
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 setwd("/Users/lachlan/Documents/PostDoc/9_packages/bayeslinear")
 library(devtools)
+library(ggplot2)
+library(CVXR)
+library(dplyr)
+
 load_all()
 
 ```
@@ -112,11 +116,7 @@ bivar_adjust
 
 We demonstrate a GBL analysis with the <tt>cdiac</tt> data that ships with <tt>CVXR</tt>. The data contains Global Monthly and Annual Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for years 1850-2015. This is plotted below.
 
-```{r, echo = FALSE}
-library(ggplot2)
-library(CVXR)
-library(dplyr)
-
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 4, fig.width = 6}
 data(cdiac)
 
 ggplot(cdiac) +
@@ -144,7 +144,7 @@ temp_adjust <- adjust(bivar, D)
 
 The result of this adjustment is shown below.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height = 4, fig.width = 6}
 plot_tbl <- tibble(
   year = as.numeric(x), 
   annual = as.numeric(temp_adjust$E_adj),
@@ -178,7 +178,7 @@ temp_const_adjust <- adjust(gbl_bivar, D)
 
 The GBL inference is shown in blue.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height = 4, fig.width = 6}
 plot_gbl_tbl <- tibble(
   year = as.numeric(x), 
   annual = as.numeric(temp_const_adjust$Ec_adj),
@@ -198,7 +198,9 @@ ggplot(cdiac, aes(x = year, y = annual)) +
     data = plot_gbl_tbl, 
     aes(ymin = annual - 2*sd, ymax = annual + 2*sd),
     alpha = 0.2, fill = "blue"
-  )
+  ) +
+  xlab("Years") +
+  ylab("Annual Temp Anomaly")
 
 ```
 

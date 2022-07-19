@@ -187,34 +187,6 @@ with <tt>CVXR</tt>. The data contains Global Monthly and Annual
 Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for
 years 1850-2015. This is plotted below.
 
-    #> Warning: package 'ggplot2' was built under R version 3.6.2
-    #> 
-    #> Attaching package: 'ggplot2'
-    #> The following object is masked from 'package:bayeslinear':
-    #> 
-    #>     resolution
-    #> Warning: package 'CVXR' was built under R version 3.6.2
-    #> 
-    #> Attaching package: 'CVXR'
-    #> The following object is masked from 'package:stats':
-    #> 
-    #>     power
-    #> Warning: package 'dplyr' was built under R version 3.6.2
-    #> 
-    #> Attaching package: 'dplyr'
-    #> The following object is masked from 'package:CVXR':
-    #> 
-    #>     id
-    #> The following object is masked from 'package:testthat':
-    #> 
-    #>     matches
-    #> The following objects are masked from 'package:stats':
-    #> 
-    #>     filter, lag
-    #> The following objects are masked from 'package:base':
-    #> 
-    #>     intersect, setdiff, setequal, union
-
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 A traditional Bayes linear analysis would specify some prior belief
