@@ -2,7 +2,10 @@
 
 export(adjust)
 export(bs)
+export(canonical)
+export(cantelli)
 export(gbl_bs)
 export(gbl_distance)
 export(inv)
+export(resolution)
 export(solve_constrained_expectation)

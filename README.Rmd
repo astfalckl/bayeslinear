@@ -34,6 +34,9 @@ install.packages("bayeslinear")
 devtools::install_github("astfalckl/bayeslinear")
 library(bayeslinear)
 ```
+
+# Vanilla Bayes Linear Analysis
+
 ## Creating Belief Structures
 
 A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt>bayeslinear</tt> are based on the creation of a belief structure object through <tt>bs()</tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
@@ -63,6 +66,18 @@ A <tt>bs</tt> object is adjusted by some data <tt>D</tt> via the <tt>adjust</tt>
 ```{r}
 D <- 0
 adjust(one_dimension, D)
+```
+
+## Summaries of Adjusted Belief Structures
+
+Methods for calculating the adjustment resolutions and performing a canonical analysis on a <tt>adj_bs</tt> object are <tt>resolution</tt> and <tt>canonical</tt>. For example, calculated on the oral glucose data (this belief structure ships with the package).
+
+```{r}
+D <- matrix(c(0,0))
+og_adjust <- adjust(oral_glucose, D)
+
+resolution(og_adjust)
+canonical(og_adjust)
 ```
 
 

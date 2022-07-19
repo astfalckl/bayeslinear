@@ -24,6 +24,8 @@ devtools::install_github("astfalckl/bayeslinear")
 library(bayeslinear)
 ```
 
+# Vanilla Bayes Linear Analysis
+
 ## Creating Belief Structures
 
 A belief structure is the fundamental unit of information that we
@@ -63,11 +65,57 @@ returned.
 ``` r
 D <- 0
 adjust(one_dimension, D)
-#> List of 3
+#> List of 5
 #>  $ E_adj  : num [1, 1] -0.2
 #>  $ var_adj: num [1, 1] 0.64
+#>  $ Rvar   : num [1, 1] 0.36
 #>  $ D      : num [1, 1] 0
+#>  $ prior  :List of 5
+#>   ..$ E_X   : num [1, 1] 1
+#>   ..$ E_D   : num [1, 1] 2
+#>   ..$ cov_XD: num [1, 1] 0.6
+#>   ..$ var_X : num [1, 1] 1
+#>   ..$ var_D : num [1, 1] 1
+#>   ..- attr(*, "class")= chr "bs"
+#>   ..- attr(*, "nx")= int 1
+#>   ..- attr(*, "nd")= int 1
 #>  - attr(*, "class")= chr "adj_bs"
 #>  - attr(*, "nx")= int 1
 #>  - attr(*, "nd")= int 1
+```
+
+## Summaries of Adjusted Belief Structures
+
+Methods for calculating the adjustment resolutions and performing a
+canonical analysis on a <tt>adj_bs</tt> object are <tt>resolution</tt>
+and <tt>canonical</tt>. For example, calculated on the oral glucose data
+(this belief structure ships with the package).
+
+``` r
+D <- matrix(c(0,0))
+og_adjust <- adjust(oral_glucose, D)
+
+resolution(og_adjust)
+#> [1] 0.3108514 0.0448334
+canonical(og_adjust)
+#> $resolutions
+#> [1] 0.31842089 0.02017772
+#> 
+#> $resolution_matrix
+#>             [,1]        [,2]
+#> [1,]  0.33360455 0.134457797
+#> [2,] -0.03539375 0.004994056
+#> 
+#> $directions
+#>            [,1]       [,2]
+#> [1,]  1.0058635 -0.3019600
+#> [2,] -0.1135872  0.7038817
+#> 
+#> $directions_prior
+#>           [,1]
+#> [1,] -3.474472
+#> [2,] -3.143107
+#> 
+#> $system_resolution
+#> [1] 0.1692993
 ```

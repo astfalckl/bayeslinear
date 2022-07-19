@@ -7,6 +7,12 @@
 # to able to roll through with sequential adjustments we probably want to
 # default assume exchangeability and go from there.
 
+# Have calc_inverse option
+
+# Check non-negative definiteness and the other algebraic stuff
+
+# Are resolution and canonical a function of bs or adj_bs??
+
 ################################################################################
 
 #' Create a belief structure
@@ -64,14 +70,16 @@ adjust.bs <- function(obj, D, ...){
 		(D - obj$E_D)
 	var_adj <- obj$var_X - obj$cov_XD %*% inv(obj$var_D) %*% 
 		t(obj$cov_XD)
+	Rvar <- obj$var_X - var_adj
 
 # Need to have a think about what we want to include in here
 	adj_obj <- structure(
     list(
 			E_adj = as.matrix(E_adj),
 			var_adj = as.matrix(var_adj),
-			# prior = obj,
-			D = as.matrix(D)
+			Rvar = Rvar,
+			D = as.matrix(D),
+			prior = obj
 			# E_D = as.matrix(obj$E_D),
 			# var_D = as.matrix(obj$var_D),
 		),
@@ -84,7 +92,59 @@ adjust.bs <- function(obj, D, ...){
 
 }
 
+#' Calculates the resolution of an adjusted belief structure
+#'
+#' @param obj An adjusted belief structure object
+#' @inheritParams adjust
+#'
+#' @return Returns a vector of calculated resolutions.
+#' @export
+resolution <- function(obj, ...) {
+  UseMethod("resolution")
+}
 
+resolution.adj_bs <- function(obj, ...){
+	var_X <- obj$prior$var_X
+	Rvar <- obj$Rvar
+
+	diag(Rvar)/diag(var_X)
+}
+
+# Add this back in if/when we ever need it
+#' Calculates the canonical directions and resolutions of an adjusted belief structure
+#'
+#' @inheritParams resolution
+#'
+#' @return Returns a list of resolution matrix, canonical directions, and canonical resolutions. 
+#' Note, the symmetric resolution matrix is used herein.
+#' @export
+canonical <- function(obj, ...) {
+  UseMethod("canonical")
+}
+
+canonical.adj_bs <- function(obj, ...){
+	var_X <- obj$prior$var_X
+	Rvar <- obj$Rvar
+
+	Td <- solve(var_X) %*% Rvar
+
+	r <- eigen(Td)$values
+	E <- eigen(Td)$vectors
+
+	scales <- 1/sqrt(diag(t(E) %*% var_X %*% E))
+	W <- diag(scales) %*% t(E)
+	E_W <- - W %*% obj$prior$E_X
+
+	return(
+		list(
+			resolutions = r,
+			resolution_matrix = Td,
+			directions = t(W),
+			directions_prior = E_W,
+			system_resolution = mean(r)
+		)
+	)
+}
 
 
 
