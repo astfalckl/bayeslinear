@@ -186,7 +186,7 @@ with <tt>CVXR</tt>. The data contains Global Monthly and Annual
 Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for
 years 1850-2015. This is plotted below.
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="80%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" />
 
 A traditional Bayes linear analysis would specify some prior belief
 structure and adjust by the data. For example
@@ -208,7 +208,7 @@ temp_adjust <- adjust(bivar, D)
 
 The result of this adjustment is shown below.
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="80%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" />
 
 We can enforce the prior belief that this data is monotone increasing by
 specifying a <tt>gbl_bs</tt> object and adjusting by the data.
@@ -224,7 +224,7 @@ temp_const_adjust <- adjust(gbl_bivar, D)
 
 The GBL inference is shown in blue.
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="80%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" />
 
 ### The boring stuff
 
