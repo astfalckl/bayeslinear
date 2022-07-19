@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "80%"
 )
 ```
 
@@ -118,7 +118,7 @@ bivar_adjust
 
 We demonstrate a GBL analysis with the <tt>cdiac</tt> data that ships with <tt>CVXR</tt>. The data contains Global Monthly and Annual Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for years 1850-2015. This is plotted below.
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 3, fig.width = 5}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 data(cdiac)
 
 ggplot(cdiac) +
@@ -146,7 +146,7 @@ temp_adjust <- adjust(bivar, D)
 
 The result of this adjustment is shown below.
 
-```{r, echo = FALSE, fig.height = 3, fig.width = 5}
+```{r, echo = FALSE}
 plot_tbl <- tibble(
   year = as.numeric(x), 
   annual = as.numeric(temp_adjust$E_adj),
@@ -180,7 +180,7 @@ temp_const_adjust <- adjust(gbl_bivar, D)
 
 The GBL inference is shown in blue.
 
-```{r, echo = FALSE, fig.height = 3, fig.width = 5}
+```{r, echo = FALSE}
 plot_gbl_tbl <- tibble(
   year = as.numeric(x), 
   annual = as.numeric(temp_const_adjust$Ec_adj),
