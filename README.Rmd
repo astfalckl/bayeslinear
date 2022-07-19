@@ -70,12 +70,143 @@ adjust(one_dimension, D)
 
 ## Summaries of Adjusted Belief Structures
 
-Methods for calculating the adjustment resolutions and performing a canonical analysis on either a <tt>bs</tt> or an <tt>adj_bs</tt> object are <tt>resolution</tt> and <tt>canonical</tt>. For example, calculated on the oral glucose data (this belief structure ships with the package).
+Methods for calculating the adjustment resolutions and performing a canonical analysis on either a <tt>bs</tt> or an <tt>adj_bs</tt> object are <tt>resolution</tt> and <tt>canonical</tt>. For example, calculated on the oral glucose data (this belief structure ships with the package). Note, we don't have to observe the adjustment to calculate the resolutions and canonical directions; they are a product of our prior beliefs.
 
 ```{r}
 resolution(oral_glucose)
 canonical(oral_glucose)
 ```
+
+# Generalised Bayes Linear Analysis
+
+## Defining and adjusting a GBL Belief Structure
+
+A GBL belief structure (<tt>gbl_bs</tt>) is constructed similarly to a standard belief structure object with the addition of a <tt>constraint</tt> argument that defines the solution space $\mathcal{C}$. <tt>bayeslinear</tt> assumes $\mathcal{C}$ is convex and uses <tt>CVXR</tt> to efficiently calculate the projection into $\mathcal{C}$. Consider the completely arbitrary example below.
+
+```{r}
+nx <- 2
+nd <- 1
+
+E_X <- matrix(c(0,0))
+E_D <- matrix(c(0))
+var_X <- matrix(c(0.6, 0.3, 0.3, 0.6), nrow = nx)
+cov_XD <- matrix(c(0.4, -0.1), nrow = nx)
+var_D <- matrix(c(1), nrow = nd)
+
+gbl_bivar <- gbl_bs(
+  E_X, E_D, cov_XD, var_X, var_D, 
+  quote(list(Ec_adj >= 0))
+)
+gbl_bivar
+```
+
+Note the <tt>constraint</tt> argument is an expression being passed through to <tt>CVXR</tt> and so must be wrapped in <tt>quote()</tt>. Adjusting a <tt>gbl_bs</tt> object is the same as for vanilla Bayes linear with a few extra outputs.
+
+```{r}
+D <- c(-3)
+bivar_adjust <- adjust(gbl_bivar, D)
+bivar_adjust
+```
+
+## Example - Monotone Regression
+
+We demonstrate a GBL analysis with the <tt>cdiac</tt> data that ships with <tt>CVXR</tt>. The data contains Global Monthly and Annual Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for years 1850-2015. This is plotted below.
+
+```{r, echo = FALSE}
+library(ggplot2)
+library(CVXR)
+library(dplyr)
+
+data(cdiac)
+
+ggplot(cdiac) +
+  geom_point(aes(x = year, y = annual)) +
+  xlab("Years") +
+  ylab("Annual Temp Anomaly")
+```
+
+A traditional Bayes linear analysis would specify some prior belief structure and adjust by the data. For example
+
+```{r}
+n <- nrow(cdiac)
+x <- cdiac$year
+
+E_X <- E_D <- matrix(rep(0,n))
+
+var_X <- cov_XD <- 0.3^2 * exp(-(as.matrix(dist(x))/25)^2) + 1e-6 * diag(rep(1, n))
+var_D <- var_X + 0.1^2 * diag(rep(1, n))
+
+bivar <- bs(E_X, E_D, cov_XD, var_X, var_D)
+
+D <- cdiac$annual
+temp_adjust <- adjust(bivar, D)
+```
+
+The result of this adjustment is shown below.
+
+```{r, echo = FALSE}
+plot_tbl <- tibble(
+  year = as.numeric(x), 
+  annual = as.numeric(temp_adjust$E_adj),
+  sd = sqrt(diag(temp_adjust$var_adj))
+)
+
+ggplot(cdiac, aes(x = year, y = annual)) + 
+  geom_point() +
+  geom_line(data = plot_tbl) +
+  geom_ribbon(
+    data = plot_tbl, 
+    aes(ymin = annual - 2*sd, ymax = annual + 2*sd),
+    alpha = 0.2
+  ) +
+  xlab("Years") +
+  ylab("Annual Temp Anomaly")
+
+```
+
+We can enforce the prior belief that this data is monotone increasing by specifying a <tt>gbl_bs</tt> object and adjusting by the data.
+
+```{r}
+gbl_bivar <- gbl_bs(
+  E_X, E_D, cov_XD, var_X, var_D, 
+  quote(list(CVXR::diff(Ec_adj) >= 0))
+)
+
+temp_const_adjust <- adjust(gbl_bivar, D)
+
+```
+
+The GBL inference is shown in blue.
+
+```{r, echo = FALSE}
+plot_gbl_tbl <- tibble(
+  year = as.numeric(x), 
+  annual = as.numeric(temp_const_adjust$Ec_adj),
+  sd = sqrt(diag(temp_const_adjust$varc_adj))
+)
+
+ggplot(cdiac, aes(x = year, y = annual)) + 
+  geom_point() +
+  geom_line(data = plot_tbl) +
+  geom_line(data = plot_gbl_tbl, color = "blue") +
+  geom_ribbon(
+    data = plot_tbl, 
+    aes(ymin = annual - 2*sd, ymax = annual + 2*sd),
+    alpha = 0.2
+  ) + 
+  geom_ribbon(
+    data = plot_gbl_tbl, 
+    aes(ymin = annual - 2*sd, ymax = annual + 2*sd),
+    alpha = 0.2, fill = "blue"
+  )
+
+```
+
+
+
+
+
+
 
 
 
