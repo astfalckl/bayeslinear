@@ -115,7 +115,7 @@ gbl_distance <- function(Ec_adj, E_adj, var_adj){
 #' @return Returns a diagonal matrix with the Cantelli inequality calculations for each dimension on the diagonal
 #' @export
 cantelli <- function(S){
-  return(diag(1/(1 + as.numeric(S^2))))
+  return(diag(1/(1 + as.numeric(S^2))^2))
 }
 
 #' Solves for the constrained expectation of a GBL belief structure
