@@ -22,16 +22,11 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-<!-- You can install the released version of bayeslinear from [CRAN](https://CRAN.R-project.org) with:
-``` r
-install.packages("bayeslinear")
-``` -->
-
 <tt>bayeslinear</tt> is currently in development; install the latest version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-# devtools::install_github("astfalckl/bayeslinear")
+install.packages("devtools")
+devtools::install_github("astfalckl/bayeslinear")
 ```
 
 # Vanilla Bayes Linear Analysis
@@ -40,9 +35,7 @@ install.packages("bayeslinear")
 
 A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt>bayeslinear</tt> are based on the creation of a belief structure object through <tt>bs()</tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
 
-```{r}
-
-# library(bayeslinear)
+```{r, warning = FALSE, message = FALSE}
 library(devtools)
 library(ggplot2)
 library(CVXR)

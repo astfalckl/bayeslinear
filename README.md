@@ -10,17 +10,12 @@
 
 ## Installation
 
-<!-- You can install the released version of bayeslinear from [CRAN](https://CRAN.R-project.org) with:
-``` r
-install.packages("bayeslinear")
-``` -->
-
 <tt>bayeslinear</tt> is currently in development; install the latest
 version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-# devtools::install_github("astfalckl/bayeslinear")
+install.packages("devtools")
+devtools::install_github("astfalckl/bayeslinear")
 ```
 
 # Vanilla Bayes Linear Analysis
@@ -36,37 +31,12 @@ object through <tt>bs()</tt>. For example the one-dimensional example in
 Goldstein and Wooff (2007) is created as
 
 ``` r
-# library(bayeslinear)
 library(devtools)
-#> Warning: package 'devtools' was built under R version 3.6.2
-#> Loading required package: usethis
-#> Warning: package 'usethis' was built under R version 3.6.2
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 3.6.2
 library(CVXR)
-#> Warning: package 'CVXR' was built under R version 3.6.2
-#> 
-#> Attaching package: 'CVXR'
-#> The following object is masked from 'package:stats':
-#> 
-#>     power
 library(dplyr)
-#> Warning: package 'dplyr' was built under R version 3.6.2
-#> 
-#> Attaching package: 'dplyr'
-#> The following object is masked from 'package:CVXR':
-#> 
-#>     id
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 
 load_all()
-#> ℹ Loading bayeslinear
-#> Warning: package 'testthat' was built under R version 3.6.2
 ```
 
 ``` r
