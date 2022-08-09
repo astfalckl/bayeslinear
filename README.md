@@ -18,6 +18,17 @@ install.packages("devtools")
 devtools::install_github("astfalckl/bayeslinear")
 ```
 
+Also, call in some other packages we need for the README
+
+``` r
+library(bayeslinear)
+library(ggplot2)
+library(CVXR)
+library(dplyr)
+
+theme_set(theme_bw())
+```
+
 # Vanilla Bayes Linear Analysis
 
 ## Creating Belief Structures
@@ -29,15 +40,6 @@ fully specify the inner product space. The methods in
 <tt>bayeslinear</tt> are based on the creation of a belief structure
 object through <tt>bs()</tt>. For example the one-dimensional example in
 Goldstein and Wooff (2007) is created as
-
-``` r
-library(bayeslinear)
-library(ggplot2)
-library(CVXR)
-library(dplyr)
-
-theme_set(theme_bw())
-```
 
 ``` r
 E_X <- 1
