@@ -40,6 +40,8 @@ library(bayeslinear)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
+
+theme_set(theme_bw())
 ```
 
 
@@ -68,6 +70,7 @@ adjust(one_dimension, D)
 Methods for calculating the adjustment resolutions and performing a canonical analysis on either a <tt>bs</tt> or an <tt>adj_bs</tt> object are <tt>resolution</tt> and <tt>canonical</tt>. For example, calculated on the oral glucose data (this belief structure ships with the package). Note, we don't have to observe the adjustment to calculate the resolutions and canonical directions; they are a product of our prior beliefs.
 
 ```{r}
+# Note: resolution is masked in ggplot2 so we have to explicitly call it from bayeslinear here
 bayeslinear::resolution(oral_glucose)
 canonical(oral_glucose)
 ```

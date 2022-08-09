@@ -35,6 +35,8 @@ library(bayeslinear)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
+
+theme_set(theme_bw())
 ```
 
 ``` r
@@ -96,6 +98,7 @@ resolutions and canonical directions; they are a product of our prior
 beliefs.
 
 ``` r
+# Note: resolution is masked in ggplot2 so we have to explicitly call it from bayeslinear here
 bayeslinear::resolution(oral_glucose)
 #> [1] 0.3108514 0.0448334
 canonical(oral_glucose)
