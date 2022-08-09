@@ -42,20 +42,12 @@ bs <- function(E_X, E_D, cov_XD, var_X, var_D){
 
 }
 
-#' Create a belief structure
-#'
-#' @param E_X Prior expectation of X
-#' @param E_D Prior expectation of D
-#' @param cov_XD Prior covariance of X and D
-#' @param var_X Prior variance of X
-#' @param var_D Prior variance of D
-#'
-#' @return Returns a belief structure (\code{bs}) object
 #' @export
 print.bs <- function(x, ...){
   utils::str(x)
 }
 
+#' @export
 print.adj_bs <- function(x, ...){
   utils::str(x)
 }
@@ -72,6 +64,7 @@ adjust <- function(obj, D, ...) {
   UseMethod("adjust")
 }
 
+#' @export
 adjust.bs <- function(obj, D, ...){
 
 	D <- as.matrix(D)
@@ -113,6 +106,7 @@ resolution <- function(obj, ...) {
   UseMethod("resolution")
 }
 
+#' @export
 resolution.bs <- function(obj, ...){
 	var_X <- obj$var_X
 	Rvar <- obj$cov_XD %*% inv(obj$var_D) %*% t(obj$cov_XD)
@@ -120,6 +114,7 @@ resolution.bs <- function(obj, ...){
 	diag(Rvar)/diag(var_X)
 }
 
+#' @export
 resolution.adj_bs <- function(obj, ...){
 	var_X <- obj$prior$var_X
 	Rvar <- obj$Rvar
@@ -140,6 +135,7 @@ canonical <- function(obj, ...) {
   UseMethod("canonical")
 }
 
+#' @export
 canonical.bs <- function(obj, ...){
 
 	var_X <- obj$var_X
@@ -165,6 +161,7 @@ canonical.bs <- function(obj, ...){
 	)
 }
 
+#' @export
 canonical.adj_bs <- function(obj, ...){
 
 	var_X <- obj$prior$var_X

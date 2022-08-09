@@ -32,14 +32,17 @@ gbl_bs <- function(E_X, E_D, cov_XD, var_X, var_D, constraint){
 
 }
 
+#' @export
 print.gbl_bs <- function(x, ...){
   utils::str(x)
 }
 
+#' @export
 print.adj_gbl_bs <- function(x, ...){
   utils::str(x)
 }
 
+#' @export
 adjust.gbl_bs <- function(obj, D, ...){
 
     D <- as.matrix(D)
