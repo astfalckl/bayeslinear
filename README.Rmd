@@ -31,8 +31,7 @@ install.packages("bayeslinear")
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("astfalckl/bayeslinear")
-library(bayeslinear)
+# devtools::install_github("astfalckl/bayeslinear")
 ```
 
 # Vanilla Bayes Linear Analysis
@@ -41,18 +40,17 @@ library(bayeslinear)
 
 A belief structure is the fundamental unit of information that we require to conduct a BL analysis blah blah blah. It requires the specification of $\mathbb{E}(X)$, $\mathbb{E}(D)$, $\mathrm{var}(X)$, $\mathrm{var}(D)$ and $\mathrm{cov}(X,D)$ to fully specify the inner product space. The methods in <tt>bayeslinear</tt> are based on the creation of a belief structure object through <tt>bs()</tt>. For example the one-dimensional example in Goldstein and Wooff (2007) is created as
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
-setwd("/Users/lachlan/Documents/PostDoc/9_packages/bayeslinear")
+```{r}
+
+# library(bayeslinear)
 library(devtools)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
 
-theme_set(theme_bw())
-
 load_all()
-
 ```
+
 
 ```{r}
 E_X <- 1
