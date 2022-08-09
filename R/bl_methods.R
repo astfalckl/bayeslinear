@@ -42,6 +42,16 @@ bs <- function(E_X, E_D, cov_XD, var_X, var_D){
 
 }
 
+#' Create a belief structure
+#'
+#' @param E_X Prior expectation of X
+#' @param E_D Prior expectation of D
+#' @param cov_XD Prior covariance of X and D
+#' @param var_X Prior variance of X
+#' @param var_D Prior variance of D
+#'
+#' @return Returns a belief structure (\code{bs}) object
+#' @export
 print.bs <- function(x, ...){
   utils::str(x)
 }
