@@ -31,12 +31,10 @@ object through <tt>bs()</tt>. For example the one-dimensional example in
 Goldstein and Wooff (2007) is created as
 
 ``` r
-library(devtools)
+library(bayeslinear)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
-
-load_all()
 ```
 
 ``` r
@@ -98,7 +96,7 @@ resolutions and canonical directions; they are a product of our prior
 beliefs.
 
 ``` r
-resolution(oral_glucose)
+bayeslinear::resolution(oral_glucose)
 #> [1] 0.3108514 0.0448334
 canonical(oral_glucose)
 #> $resolutions
@@ -248,25 +246,20 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] bayeslinear_0.0.0.9000 testthat_3.0.4         dplyr_1.0.7           
-#> [4] CVXR_1.0-9             ggplot2_3.3.5          devtools_2.4.2        
-#> [7] usethis_2.0.1         
+#> [1] dplyr_1.0.7            CVXR_1.0-9             ggplot2_3.3.5         
+#> [4] bayeslinear_0.0.0.9000
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] Rcpp_1.0.7        lattice_0.20-38   prettyunits_1.0.2 ps_1.6.0         
-#>  [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.28     utf8_1.2.2       
-#>  [9] gmp_0.6-2         R6_2.5.1          backports_1.1.5   evaluate_0.14    
-#> [13] pillar_1.6.4      rlang_0.4.12      rstudioapi_0.13   callr_3.7.0      
-#> [17] Matrix_1.2-18     rmarkdown_2.1     desc_1.3.0        labeling_0.4.2   
-#> [21] osqp_0.6.0.3      stringr_1.4.0     bit_1.1-14        munsell_0.5.0    
-#> [25] compiler_3.6.1    xfun_0.12         pkgconfig_2.0.3   pkgbuild_1.2.0   
-#> [29] htmltools_0.4.0   tidyselect_1.1.1  tibble_3.1.6      fansi_0.5.0      
-#> [33] crayon_1.4.2      withr_2.4.2       MASS_7.3-51.4     grid_3.6.1       
-#> [37] gtable_0.3.0      lifecycle_1.0.1   DBI_1.1.0         magrittr_2.0.1   
-#> [41] scales_1.1.1      cli_3.1.0         stringi_1.4.3     cachem_1.0.5     
-#> [45] farver_2.1.0      Rmpfr_0.8-2       fs_1.5.0          remotes_2.4.0    
-#> [49] ellipsis_0.3.2    generics_0.1.1    vctrs_0.3.8       tools_3.6.1      
-#> [53] bit64_0.9-7       glue_1.5.0        purrr_0.3.4       processx_3.5.2   
-#> [57] pkgload_1.2.1     fastmap_1.0.1     yaml_2.2.0        colorspace_2.0-2 
-#> [61] sessioninfo_1.1.1 memoise_2.0.0     knitr_1.27
+#>  [1] gmp_0.6-2        Rcpp_1.0.7       pillar_1.6.4     compiler_3.6.1  
+#>  [5] tools_3.6.1      bit_1.1-14       digest_0.6.28    lattice_0.20-38 
+#>  [9] evaluate_0.14    lifecycle_1.0.1  tibble_3.1.6     gtable_0.3.0    
+#> [13] pkgconfig_2.0.3  rlang_0.4.12     Matrix_1.2-18    DBI_1.1.0       
+#> [17] yaml_2.2.0       xfun_0.12        osqp_0.6.0.3     Rmpfr_0.8-2     
+#> [21] withr_2.4.2      stringr_1.4.0    knitr_1.27       generics_0.1.1  
+#> [25] vctrs_0.3.8      bit64_0.9-7      grid_3.6.1       tidyselect_1.1.1
+#> [29] glue_1.5.0       R6_2.5.1         fansi_0.5.0      rmarkdown_2.1   
+#> [33] farver_2.1.0     purrr_0.3.4      magrittr_2.0.1   MASS_7.3-51.4   
+#> [37] scales_1.1.1     ellipsis_0.3.2   htmltools_0.4.0  assertthat_0.2.1
+#> [41] colorspace_2.0-2 labeling_0.4.2   utf8_1.2.2       stringi_1.4.3   
+#> [45] munsell_0.5.0    crayon_1.4.2
 ```
