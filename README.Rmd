@@ -35,6 +35,7 @@ library(bayeslinear)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
+library(patchwork)
 
 theme_set(theme_bw())
 ```
@@ -63,10 +64,31 @@ bivariate_bs
 
 ## Adjusting Belief Structures
 
-A <tt>bs</tt> object is adjusted by some data <tt>D</tt> via the <tt>adjust</tt> method. An adjusted belief structure <tt>adj_bs</tt> is returned. 
+A <tt>belief_structure</tt> object is adjusted by some data <tt>d</tt> via the <tt>adjust</tt> method. An adjusted belief structure <tt>adj_belief_structure</tt> is returned. Note that the initial belief structure is always stored in <tt>prior_bs</tt>.
 
 ```{r}
 d <- c(3, 6.5)
 bivariate_adj_bs <- adjust(bivariate_bs, d)
 bivariate_adj_bs
+```
+
+## Creating Generalised Belief Structures
+
+We may augment a belief structure with a solution constraint by using the <tt>gen_belief_structure</tt> method. This is similar to above however with the inclusion of a quoted constraint that gets passed to <tt>CVXR</tt>. We demonstrate what some of these constraints look like here, and point towards [here](https://cvxr.rbind.io) for a comprehensive list of examples.
+
+```{r}
+bivariate_gbs <- gen_belief_structure(
+  exp_x, exp_d, cov_xd, var_x, var_d,
+  quote(list(gen_adj_exp >= 0))
+)
+bivariate_gbs
+```
+
+## Adjusting Generalised Belief Structures
+
+This happens with the same <tt>adjust</tt> method as before, but returns the generalised adjusted expectation and variance according to the specified constraint.
+
+```{r}
+bivariate_adj_gbs <- adjust(bivariate_gbs, d)
+bivariate_adj_gbs
 ```

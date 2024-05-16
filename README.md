@@ -27,6 +27,7 @@ library(bayeslinear)
 library(ggplot2)
 library(CVXR)
 library(dplyr)
+library(patchwork)
 
 theme_set(theme_bw())
 ```
@@ -69,9 +70,10 @@ bivariate_bs
 
 ## Adjusting Belief Structures
 
-A <tt>bs</tt> object is adjusted by some data <tt>D</tt> via the
-<tt>adjust</tt> method. An adjusted belief structure <tt>adj_bs</tt> is
-returned.
+A <tt>belief_structure</tt> object is adjusted by some data <tt>d</tt>
+via the <tt>adjust</tt> method. An adjusted belief structure
+<tt>adj_belief_structure</tt> is returned. Note that the initial belief
+structure is always stored in <tt>prior_bs</tt>.
 
 ``` r
 d <- c(3, 6.5)
@@ -92,6 +94,55 @@ bivariate_adj_bs
 #>   ..- attr(*, "nx")= int 2
 #>   ..- attr(*, "nd")= int 2
 #>  - attr(*, "class")= chr "adj_belief_structure"
+#>  - attr(*, "nx")= int 2
+#>  - attr(*, "nd")= int 2
+```
+
+## Creating Generalised Belief Structures
+
+We may augment a belief structure with a solution constraint by using
+the <tt>gen_belief_structure</tt> method. This is similar to above
+however with the inclusion of a quoted constraint that gets passed to
+<tt>CVXR</tt>. We demonstrate what some of these constraints look like
+here, and point towards [here](https://cvxr.rbind.io) for a
+comprehensive list of examples.
+
+``` r
+bivariate_gbs <- gen_belief_structure(
+  exp_x, exp_d, cov_xd, var_x, var_d,
+  quote(list(gen_adj_exp >= 0))
+)
+bivariate_gbs
+#> List of 6
+#>  $ exp_x     : num [1:2, 1] 1 1
+#>  $ exp_d     : num [1:2, 1] 1 1
+#>  $ cov_xd    : num [1:2, 1:2] 0.4 -0.1 -0.1 -0.3
+#>  $ var_x     : num [1:2, 1:2] 0.54 0.09 0.09 0.54
+#>  $ var_d     : num [1:2, 1:2] 1 -0.2 -0.2 1
+#>  $ constraint: language list(gen_adj_exp >= 0)
+#>  - attr(*, "class")= chr "gen_belief_structure"
+#>  - attr(*, "nx")= int 2
+#>  - attr(*, "nd")= int 2
+```
+
+## Adjusting Generalised Belief Structures
+
+This happens with the same <tt>adjust</tt> method as before, but returns
+the generalised adjusted expectation and variance according to the
+specified constraint.
+
+``` r
+bivariate_adj_gbs <- adjust(bivariate_gbs, d)
+#> CVXR returned with status: optimal
+bivariate_adj_gbs
+#> List of 5
+#>  $ gen_adj_exp: num [1:2, 1] 2.02 -2.18e-21
+#>  $ gen_adj_var: num [1:2, 1:2] 0.2231 0.0725 0.0725 0.0486
+#>  $ d          : num [1:2, 1] 3 6.5
+#>  $ adj_exp    : num [1:2, 1] 1.68 -1.17
+#>  $ adj_var    : num [1:2, 1:2] 0.38 0.123 0.123 0.423
+#>  - attr(*, "class")= chr "adj_gen_belief_structure"
+#>  - attr(*, "CVXR_status")= chr "optimal"
 #>  - attr(*, "nx")= int 2
 #>  - attr(*, "nd")= int 2
 ```

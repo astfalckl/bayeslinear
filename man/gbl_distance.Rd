@@ -4,7 +4,7 @@
 \alias{gbl_distance}
 \title{GBL Distance}
 \usage{
-gbl_distance(Ec_adj, E_adj, var_adj)
+gbl_distance(gen_adj_exp, adj_exp, adj_var)
 }
 \arguments{
 \item{Ec_adj}{CVXR Variable object}

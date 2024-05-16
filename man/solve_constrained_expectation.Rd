@@ -4,15 +4,11 @@
 \alias{solve_constrained_expectation}
 \title{Solves for the constrained expectation of a GBL belief structure}
 \usage{
-solve_constrained_expectation(E_adj, var_adj, constraint)
+solve_constrained_expectation(adj_exp, adj_var, constraint)
 }
 \arguments{
-\item{E_adj}{Standard BL adjusted expectation}
-
-\item{var_adj}{Standard BL adjusted variance}
-
-\item{constraint}{Constraint expression. See the README for examples on how to specify this.
-\code{bayeslinear} currently assumes that constraints are convex and solves using CVXR.}
+\item{constraint}{Quoted constraint expression to be passed to \code{CVXR}.
+See the README for examples on how to specify this.}
 }
 \value{
 The constrained adjusted expectation

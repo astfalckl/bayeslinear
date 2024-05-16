@@ -26,3 +26,14 @@ calc_ellipse <- function(prob, mu, sigma) {
   dplyr::as_tibble(ellipse)
 
 }
+
+#' Cantelli's inequality
+#'
+#' @param s constraint discrepancy vector. Expects a numeric vector.
+#'
+#' @return Returns a diagonal matrix with the inequality calculations on the
+#' diagonals
+#' @export
+cantelli <- function(s) {
+  diag(1 / (1 + as.numeric(s^2))^2)
+}

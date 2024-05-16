@@ -1,99 +1,97 @@
-################################################################################
-##################################    TODO    ##################################
-################################################################################
-
-################################################################################
-
-#' Create a GBL belief structure
-#' 
-#' Similar to a standard belief structure but with the ability to specify a constrained solution space
+#' Create a Generalised Bayes Linear belief structure
+#'
+#' Similar to a standard belief structure but with the ability to specify a
+#' constrained solution space
 #'
 #' @inheritParams belief_structure
-#' @param constraint Constraint expression. See the README for examples on how to specify this. 
-#' \code{bayeslinear} currently assumes that constraints are convex and solves using CVXR.
+#' @param constraint Quoted constraint expression to be passed to \code{CVXR}.
+#' See the README for examples on how to specify this.
 #'
-#' @return Returns a GBL belief structure (\code{gbl_bs}) object
+#' @return Returns a GBL belief structure (\code{gen_belief_structure}) object
 #' @export
-gbl_bs <- function(E_X, E_D, cov_XD, var_X, var_D, constraint){
+gen_belief_structure <- function(
+  exp_x, exp_d, cov_xd, var_x, var_d,
+  constraint
+) {
 
   structure(
     list(
-        E_X = E_X,
-        E_D = E_D,
-        cov_XD = cov_XD,
-        var_X = var_X,
-        var_D = var_D,
+        exp_x = as.matrix(exp_x),
+        exp_d = as.matrix(exp_d),
+        cov_xd = as.matrix(cov_xd),
+        var_x = as.matrix(var_x),
+        var_d = as.matrix(var_d),
         constraint = constraint
     ),
-    class = "gbl_bs",
-    nx = nrow(as.matrix(E_X)),
-    nd = nrow(as.matrix(E_D))
+    class = "gen_belief_structure",
+    nx = nrow(as.matrix(exp_x)),
+    nd = nrow(as.matrix(exp_d))
   )
 
 }
 
 #' @export
-print.gbl_bs <- function(x, ...){
+print.gen_belief_structure <- function(x, ...) {
   utils::str(x)
 }
 
 #' @export
-print.adj_gbl_bs <- function(x, ...){
+print.adj_gen_belief_structure <- function(x, ...) {
   utils::str(x)
 }
 
 #' @export
-adjust.gbl_bs <- function(obj, D, ...){
+adjust.gen_belief_structure <- function(obj, d, ...) {
 
-    D <- as.matrix(D)
+  d <- as.matrix(d)
 
-    # ----- Vanilla Update ----- #
+  # ----- Vanilla Update ----- #
 
-    E_adj <- obj$E_X + obj$cov_XD %*% solve(obj$var_D) %*% (D - obj$E_D)
-    var_adj <- obj$var_X - obj$cov_XD %*% solve(obj$var_D) %*% t(obj$cov_XD)
+  adj_exp <- obj$exp_x + obj$cov_xd %*% mp_inv(obj$var_d) %*% (d - obj$exp_d)
+  adj_var <- obj$var_x - obj$cov_xd %*% mp_inv(obj$var_d) %*% t(obj$cov_xd)
 
-    # ----- Constrained Expectation ----- #
+  # ----- Constrained Expectation ----- #
 
-    Ec_adj <- solve_constrained_expectation(
-        E_adj,
-        var_adj,
-        obj$constraint
-    )
+  gen_adj_exp <- solve_constrained_expectation(
+      adj_exp,
+      adj_var,
+      obj$constraint
+  )
 
-    status <- attributes(Ec_adj)$status
-    attributes(Ec_adj)$status <- NULL
+  status <- attributes(gen_adj_exp)$status
+  attributes(gen_adj_exp)$status <- NULL
 
-     if(status != "optimal") warning('CVXR has not found optimal solution.')
+  cat(paste("CVXR returned with status:", status))
 
-    # ----- Constrained Variance ----- #
+  # ----- Constrained Variance ----- #
 
-    chol_adj <- t(base::chol(var_adj))
-    chol_solve <- inv(chol_adj)
+  chol_adj <- t(base::chol(adj_var))
+  chol_solve <- solve(chol_adj)
 
-    E_adj_rotate <- chol_solve %*% E_adj
-    solution_rotate <- chol_solve %*% Ec_adj
+  rotated_adj_exp <- chol_solve %*% adj_exp
+  rotated_gen_adj_exp <- chol_solve %*% gen_adj_exp
 
-    S <- abs(solution_rotate - E_adj_rotate)
+  s <- abs(rotated_gen_adj_exp - rotated_adj_exp)
 
-    varc_adj <- chol_adj %*% cantelli(S) %*% t(chol_adj) # @astfalckl HACK: change cantelli to user defined function
+  gen_adj_var <- chol_adj %*% cantelli(s) %*% t(chol_adj)
 
-    # ----- Defining object ----- #
+  # ----- Return object ----- #
 
-    adj_gbl_bs <- structure(
-        list(
-            Ec_adj = Ec_adj,
-            varc_adj = varc_adj,
-            D = as.matrix(D),
-            E_adj = as.matrix(E_adj),
-            var_adj = as.matrix(var_adj)
-        ),
-        class = "adj_gbl_bs",
-        status = status,
-        nx = base::attributes(obj)$nx,
-        nd = base::attributes(obj)$nd
-    )
+  adj_gen_belief_structure <- structure(
+      list(
+          gen_adj_exp = gen_adj_exp,
+          gen_adj_var = gen_adj_var,
+          d = d,
+          adj_exp = as.matrix(adj_exp),
+          adj_var = as.matrix(adj_var)
+      ),
+      class = "adj_gen_belief_structure",
+      CVXR_status = status,
+      nx = base::attributes(obj)$nx,
+      nd = base::attributes(obj)$nd
+  )
 
-    return(adj_gbl_bs)
+  return(adj_gen_belief_structure)
 
 }
 
@@ -105,49 +103,32 @@ adjust.gbl_bs <- function(obj, D, ...){
 #'
 #' @return Returns the distance between \code{Ec_adj} and \code{E_adj} in the inner product space defined by \code{var_adj}
 #' @export
-gbl_distance <- function(Ec_adj, E_adj, var_adj){
-      CVXR::matrix_frac(Ec_adj - E_adj, var_adj)
-}
-
-#' Cantelli's inequality for a discrepancy S
-#'
-#' @param S Discrepancy term that's still to be named. Accepts either a numeric/vector/matrix object
-#'
-#' @return Returns a diagonal matrix with the Cantelli inequality calculations for each dimension on the diagonal
-#' @export
-cantelli <- function(S){
-  return(diag(1/(1 + as.numeric(S^2))^2))
+gbl_distance <- function(gen_adj_exp, adj_exp, adj_var) {
+      CVXR::matrix_frac(gen_adj_exp - adj_exp, adj_var)
 }
 
 #' Solves for the constrained expectation of a GBL belief structure
 #'
 #' @inheritParams gbl_distance
-#' @inheritParams gbl_bs
+#' @inheritParams gen_belief_structure
 #'
 #' @return The constrained adjusted expectation
 #' @export
-solve_constrained_expectation <- function(E_adj, var_adj, constraint){
+solve_constrained_expectation <- function(adj_exp, adj_var, constraint) {
 
-    Ec_adj <- CVXR::Variable(nrow(E_adj))
+    gen_adj_exp <- CVXR::Variable(nrow(adj_exp))
 
     objective <- CVXR::Minimize(
-      gbl_distance(Ec_adj, E_adj, var_adj)
+      gbl_distance(gen_adj_exp, adj_exp, adj_var)
     )
 
-    problem <- CVXR::Problem(
-    objective, 
-    constraints = base::eval(constraint)
-    )
+    problem <- CVXR::Problem(objective, constraints = base::eval(constraint))
 
     result <- CVXR::solve(problem)
 
-    solution = result[[1]]
+    solution <- result[[1]]
     base::attr(solution, "status") <- result$status
 
     return(solution)
 
 }
-
-
-
-
