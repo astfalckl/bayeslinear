@@ -15,10 +15,10 @@ mp_inv <- function(...) MASS::ginv(...)
 #'
 #' @return A tibble with x and y ellipse coordinates
 #' @export
-calc_ellipse <- function(prob, mu, sigma) {
+calc_ellipse <- function(sd, mu, sigma) {
 
-  theta <- seq(0, 2*pi, length = 360)
-  r1 <- sqrt(stats::qchisq(prob, 2))
+  theta <- seq(0, 2 * pi, length = 360)
+  r1 <- sd
   pts <- data.frame(x = r1 * cos(theta), y = r1 * sin(theta)) %>% as.matrix()
   ellipse <- pts %*% chol(sigma) + t(matrix(rep(mu, 360), nrow = 2))
   colnames(ellipse) <- c("x", "y")

@@ -36,6 +36,7 @@ library(ggplot2)
 library(CVXR)
 library(dplyr)
 library(patchwork)
+library(latex2exp)
 
 theme_set(theme_bw())
 ```
@@ -91,4 +92,74 @@ This happens with the same <tt>adjust</tt> method as before, but returns the gen
 ```{r}
 bivariate_adj_gbs <- adjust(bivariate_gbs, d)
 bivariate_adj_gbs
+```
+
+## Plotting the results
+
+We recreate Figure 1 from PAPER using the results above. We note that <tt>ggplot</tt> has a habit of being very verbose, and so we have hidden the code from the displayed <tt>README</tt> on GitHub. Please consult the source file for all plotting code used.
+
+```{r, echo = FALSE}
+adj_exp_text <- tibble(
+  x = bivariate_adj_bs$adj_exp[1, ],
+  y = bivariate_adj_bs$adj_exp[2, ],
+  text = TeX("${E_d}[X]$", output = "character")
+)
+cadj_exp_text <- tibble(
+  x = bivariate_adj_bs$gen_adj_exp[1, ],
+  y = bivariate_adj_bs$gen_adj_exp[2, ],
+  text = TeX("${E_d^C}[X]$", output = "character")
+)
+
+x_min <- -1.5
+x_max <- 3.5
+y_min <- -3.5
+y_max <- 1.5
+
+x_axis <- matrix(c(x_max, x_min, 0, 0), nrow = 2) %>% as_tibble()
+y_axis <- matrix(c(0, 0, y_max, y_min), nrow = 2) %>% as_tibble()
+
+adj_exp_plot <- ggplot() +
+  geom_rect(
+    aes(xmin = 0, xmax = x_max, ymin = 0, ymax = y_max),
+    fill = "#d8d8d8"
+  ) +
+  geom_vline(aes(xintercept = 0), alpha = 0.5) +
+  geom_hline(aes(yintercept = 0), alpha = 0.5) +
+  geom_point(
+    data = adj_exp_text,
+    aes(x = x, y = y)
+  ) +
+  geom_text(
+    data = adj_exp_text,
+    aes(x = x - .3, y = y - .4, label = text),
+    parse = TRUE
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      1, bivariate_adj_bs$adj_exp, bivariate_adj_bs$adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.8
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      2, bivariate_adj_bs$adj_exp, bivariate_adj_bs$adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.2
+  ) +
+  geom_line(data = x_axis, aes(x = V1, y = V2), size = 1) +
+  geom_line(data = y_axis, aes(x = V1, y = V2), size = 1) +
+  scale_x_continuous(
+    TeX('$X_1$'),
+    limits = c(-1.5, 3.5),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(
+    TeX('$X_2$'),
+    limits = c(-3.5, 1.5),
+    expand = c(0, 0)
+  ) +
+  coord_fixed() +
+  theme(panel.grid.minor = element_blank())
+
+  adj_exp_plot
 ```
