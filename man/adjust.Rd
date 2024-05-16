@@ -2,20 +2,21 @@
 % Please edit documentation in R/bl_methods.R
 \name{adjust}
 \alias{adjust}
-\title{Adjust either a belief structure or adjusted belief structure with observed data}
+\title{Adjust a belief structure with observed data}
 \usage{
-adjust(obj, D, ...)
+adjust(obj, d, ...)
 }
 \arguments{
-\item{obj}{A belief structure}
+\item{obj}{A belief structure calculated from \code{belief_structure()}.}
 
-\item{D}{A matrix of observed data}
+\item{d}{A numerical vecotr of 1D matrix of observed data.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-Returns a adjusted belief structure (\code{adj_bs}) object
+Returns a adjusted belief structure (\code{adj_belief_structure})
+object
 }
 \description{
-Adjust either a belief structure or adjusted belief structure with observed data
+Adjust a belief structure with observed data
 }

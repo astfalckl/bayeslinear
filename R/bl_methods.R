@@ -1,103 +1,84 @@
-
-################################################################################
-##################################    TODO    ##################################
-################################################################################
-
-# Have a think about what information we want to include in adj_bs. If we want
-# to able to roll through with sequential adjustments we probably want to
-# default assume exchangeability and go from there.
-
-# Have calc_inverse option
-
-# Check non-negative definiteness and the other algebraic stuff
-
-# Are resolution and canonical a function of bs or adj_bs??
-
-################################################################################
-
-#' Create a belief structure
+#' Create belief structure object
 #'
-#' @param E_X Prior expectation of X
-#' @param E_D Prior expectation of D
-#' @param cov_XD Prior covariance of X and D
-#' @param var_X Prior variance of X
-#' @param var_D Prior variance of D
+#' @param exp_x Prior expectation of X. Expects either a numeric vector or 1D
+#' matrix.
+#' @param exp_d Prior expectation of D. Expects either a numeric vector or 1D
+#' matrix.
+#' @param cov_xd Prior covariance of X and D
+#' @param var_x Prior variance of X
+#' @param var_d Prior variance of D
 #'
-#' @return Returns a belief structure (\code{bs}) object
+#' @return Returns a belief structure (\code{belief_structure}) object
 #' @export
-bs <- function(E_X, E_D, cov_XD, var_X, var_D){
+belief_structure <- function(exp_x, exp_d, cov_xd, var_x, var_d) {
 
   structure(
     list(
-			E_X = as.matrix(E_X),
-			E_D = as.matrix(E_D),
-			cov_XD = as.matrix(cov_XD),
-			var_X = as.matrix(var_X),
-			var_D = as.matrix(var_D)
-		),
-		class = "bs",
-		nx = nrow(as.matrix(E_X)),
-		nd = nrow(as.matrix(E_D))
+        exp_x = as.matrix(exp_x),
+        exp_d = as.matrix(exp_d),
+        cov_xd = as.matrix(cov_xd),
+        var_x = as.matrix(var_x),
+        var_d = as.matrix(var_d)
+      ),
+      class = "belief_structure",
+      nx = nrow(as.matrix(exp_x)),
+      nd = nrow(as.matrix(exp_d))
   )
 
 }
 
 #' @export
-print.bs <- function(x, ...){
+print.belief_structure <- function(x, ...) {
   utils::str(x)
 }
 
 #' @export
-print.adj_bs <- function(x, ...){
+print.adj_belief_structure <- function(x, ...) {
   utils::str(x)
 }
 
-#' Adjust either a belief structure or adjusted belief structure with observed data
+#' Adjust a belief structure with observed data
 #'
-#' @param obj A belief structure
-#' @param D A matrix of observed data
+#' @param obj A belief structure calculated from \code{belief_structure()}.
+#' @param d A numerical vecotr of 1D matrix of observed data.
 #' @param ... further arguments passed to or from other methods.
 #'
-#' @return Returns a adjusted belief structure (\code{adj_bs}) object
+#' @return Returns a adjusted belief structure (\code{adj_belief_structure})
+#' object
 #' @export
-adjust <- function(obj, D, ...) {
+adjust <- function(obj, d, ...) {
   UseMethod("adjust")
 }
 
 #' @export
-adjust.bs <- function(obj, D, ...){
+adjust.belief_structure <- function(obj, d, ...) {
 
-	D <- as.matrix(D)
+  d <- as.matrix(d)
 
-	E_adj <- obj$E_X + obj$cov_XD %*% inv(obj$var_D) %*% 
-		(D - obj$E_D)
-	var_adj <- obj$var_X - obj$cov_XD %*% inv(obj$var_D) %*% 
-		t(obj$cov_XD)
-	Rvar <- obj$var_X - var_adj
+  adj_exp <- obj$exp_x + obj$cov_xd %*% mp_inv(obj$var_d) %*% (d - obj$exp_d)
+  adj_var <- obj$var_x - obj$cov_xd %*% mp_inv(obj$var_d) %*% t(obj$cov_xd)
+  resolved_var <- obj$var_x - adj_var
 
-# Need to have a think about what we want to include in here
-	adj_obj <- structure(
+  adj_obj <- structure(
     list(
-			E_adj = as.matrix(E_adj),
-			var_adj = as.matrix(var_adj),
-			Rvar = Rvar,
-			D = as.matrix(D),
-			prior = obj
-			# E_D = as.matrix(obj$E_D),
-			# var_D = as.matrix(obj$var_D),
-		),
-		class = "adj_bs",
-		nx = base::attributes(obj)$nx,
-		nd = base::attributes(obj)$nd
+      adj_exp = adj_exp,
+      adj_var = adj_var,
+      resolved_var = resolved_var,
+      d = as.matrix(d),
+      prior_bs = obj
+    ),
+    class = "adj_belief_structure",
+    nx = attributes(obj)$nx,
+    nd = attributes(obj)$nd
   )
 
-	return(adj_obj)
+  return(adj_obj)
 
 }
 
 #' Calculates the resolution of an adjusted belief structure
 #'
-#' @param obj An adjusted belief structure object
+#' @param obj An adjusted or standard belief structure object
 #' @inheritParams adjust
 #'
 #' @return Returns a vector of calculated resolutions.
@@ -107,28 +88,24 @@ resolution <- function(obj, ...) {
 }
 
 #' @export
-resolution.bs <- function(obj, ...){
-	var_X <- obj$var_X
-	Rvar <- obj$cov_XD %*% inv(obj$var_D) %*% t(obj$cov_XD)
-
-	diag(Rvar)/diag(var_X)
+resolution.belief_structure <- function(obj, ...) {
+  resolved_var <- obj$cov_XD %*% mp_inv(obj$var_D) %*% t(obj$cov_XD)
+  diag(resolved_var) / diag(obj$var_x)
 }
 
 #' @export
-resolution.adj_bs <- function(obj, ...){
-	var_X <- obj$prior$var_X
-	Rvar <- obj$Rvar
-
-	diag(Rvar)/diag(var_X)
+resolution.adj_belief_structure <- function(obj, ...) {
+  diag(obj$resolved_var) / diag(obj$prior_bs$var_x)
 }
 
-# Add this back in if/when we ever need it
-#' Calculates the canonical directions and resolutions of either a belief structure or an adjusted belief structure
+#' Calculate the canonical directions and resolutions
 #'
-#' @param obj Either a \code{bs} or an \code{adj_bs} object
+#' @param obj Either a \code{belief_structure} or an \code{adj_belief_structure}
+#' object
 #' @inheritParams adjust
 #'
-#' @return Returns a list of resolution matrix, canonical directions, and canonical resolutions. 
+#' @return Returns a list of resolution matrix, canonical directions, and
+#' canonical resolutions.
 #' Note, the symmetric resolution matrix is used herein.
 #' @export
 canonical <- function(obj, ...) {
@@ -136,70 +113,53 @@ canonical <- function(obj, ...) {
 }
 
 #' @export
-canonical.bs <- function(obj, ...){
+canonical.belief_structure <- function(obj, ...) {
 
-	var_X <- obj$var_X
-	Rvar <- obj$cov_XD %*% inv(obj$var_D) %*% t(obj$cov_XD)
+  var_x <- obj$var_x
+  resolved_var <- obj$cov_xd %*% mp_inv(obj$var_d) %*% t(obj$cov_xd)
 
-	Td <- solve(var_X) %*% Rvar
+  res_matrix <- mp_inv(var_x) %*% resolved_var
 
-	r <- eigen(Td)$values
-	E <- eigen(Td)$vectors
+  r <- eigen(res_matrix)$values
+  v <- eigen(res_matrix)$vectors
 
-	scales <- 1/sqrt(diag(t(E) %*% var_X %*% E))
-	W <- diag(scales) %*% t(E)
-	E_W <- - W %*% obj$E_X
+  scales <- 1 / sqrt(diag(t(v) %*% var_x %*% v))
+  w <- diag(scales) %*% t(v)
+  exp_w <- - w %*% obj$E_X
 
-	return(
-		list(
-			resolutions = r,
-			resolution_matrix = Td,
-			directions = t(W),
-			directions_prior = E_W,
-			system_resolution = mean(r)
-		)
-	)
+  return(
+    list(
+      resolutions = r,
+      resolution_matrix = res_matrix,
+      directions = t(w),
+      directions_prior = exp_w,
+      system_resolution = mean(r)
+    )
+  )
 }
 
 #' @export
-canonical.adj_bs <- function(obj, ...){
+canonical.adj_belief_structure <- function(obj, ...) {
 
-	var_X <- obj$prior$var_X
-	Rvar <- obj$Rvar
+  var_x <- obj$prior$var_x
+  resolved_var <- obj$resolved_var
 
-	Td <- solve(var_X) %*% Rvar
+  res_matrix <- mp_inv(var_x) %*% resolved_var
 
-	r <- eigen(Td)$values
-	E <- eigen(Td)$vectors
+  r <- eigen(res_matrix)$values
+  v <- eigen(res_matrix)$vectors
 
-	scales <- 1/sqrt(diag(t(E) %*% var_X %*% E))
-	W <- diag(scales) %*% t(E)
-	E_W <- - W %*% obj$prior$E_X
+  scales <- 1 / sqrt(diag(t(v) %*% var_x %*% v))
+  w <- diag(scales) %*% t(v)
+  exp_w <- - w %*% obj$prior$E_X
 
-	return(
-		list(
-			resolutions = r,
-			resolution_matrix = Td,
-			directions = t(W),
-			directions_prior = E_W,
-			system_resolution = mean(r)
-		)
-	)
+  return(
+    list(
+      resolutions = r,
+      resolution_matrix = res_matrix,
+      directions = t(w),
+      directions_prior = exp_w,
+      system_resolution = mean(r)
+    )
+  )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

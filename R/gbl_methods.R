@@ -8,7 +8,7 @@
 #' 
 #' Similar to a standard belief structure but with the ability to specify a constrained solution space
 #'
-#' @inheritParams bs
+#' @inheritParams belief_structure
 #' @param constraint Constraint expression. See the README for examples on how to specify this. 
 #' \code{bayeslinear} currently assumes that constraints are convex and solves using CVXR.
 #'
@@ -18,11 +18,11 @@ gbl_bs <- function(E_X, E_D, cov_XD, var_X, var_D, constraint){
 
   structure(
     list(
-        E_X = as.matrix(E_X),
-        E_D = as.matrix(E_D),
-        cov_XD = as.matrix(cov_XD),
-        var_X = as.matrix(var_X),
-        var_D = as.matrix(var_D),
+        E_X = E_X,
+        E_D = E_D,
+        cov_XD = cov_XD,
+        var_X = var_X,
+        var_D = var_D,
         constraint = constraint
     ),
     class = "gbl_bs",
@@ -49,10 +49,8 @@ adjust.gbl_bs <- function(obj, D, ...){
 
     # ----- Vanilla Update ----- #
 
-    E_adj <- obj$E_X + obj$cov_XD %*% inv(obj$var_D) %*% 
-        (D - obj$E_D)
-    var_adj <- obj$var_X - obj$cov_XD %*% inv(obj$var_D) %*% 
-        t(obj$cov_XD)
+    E_adj <- obj$E_X + obj$cov_XD %*% solve(obj$var_D) %*% (D - obj$E_D)
+    var_adj <- obj$var_X - obj$cov_XD %*% solve(obj$var_D) %*% t(obj$cov_XD)
 
     # ----- Constrained Expectation ----- #
 
@@ -108,7 +106,7 @@ adjust.gbl_bs <- function(obj, D, ...){
 #' @return Returns the distance between \code{Ec_adj} and \code{E_adj} in the inner product space defined by \code{var_adj}
 #' @export
 gbl_distance <- function(Ec_adj, E_adj, var_adj){
-    CVXR::matrix_frac(Ec_adj - E_adj, var_adj)
+      CVXR::matrix_frac(Ec_adj - E_adj, var_adj)
 }
 
 #' Cantelli's inequality for a discrepancy S
@@ -133,7 +131,7 @@ solve_constrained_expectation <- function(E_adj, var_adj, constraint){
     Ec_adj <- CVXR::Variable(nrow(E_adj))
 
     objective <- CVXR::Minimize(
-    gbl_distance(Ec_adj, E_adj, var_adj)
+      gbl_distance(Ec_adj, E_adj, var_adj)
     )
 
     problem <- CVXR::Problem(

@@ -7,7 +7,7 @@
 resolution(obj, ...)
 }
 \arguments{
-\item{obj}{An adjusted belief structure object}
+\item{obj}{An adjusted or standard belief structure object}
 
 \item{...}{further arguments passed to or from other methods.}
 }

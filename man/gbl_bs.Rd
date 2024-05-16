@@ -7,16 +7,6 @@
 gbl_bs(E_X, E_D, cov_XD, var_X, var_D, constraint)
 }
 \arguments{
-\item{E_X}{Prior expectation of X}
-
-\item{E_D}{Prior expectation of D}
-
-\item{cov_XD}{Prior covariance of X and D}
-
-\item{var_X}{Prior variance of X}
-
-\item{var_D}{Prior variance of D}
-
 \item{constraint}{Constraint expression. See the README for examples on how to specify this.
 \code{bayeslinear} currently assumes that constraints are convex and solves using CVXR.}
 }
