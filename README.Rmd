@@ -105,8 +105,8 @@ adj_exp_text <- tibble(
   text = TeX("${E_d}[X]$", output = "character")
 )
 cadj_exp_text <- tibble(
-  x = bivariate_adj_bs$gen_adj_exp[1, ],
-  y = bivariate_adj_bs$gen_adj_exp[2, ],
+  x = bivariate_adj_gbs$gen_adj_exp[1, ],
+  y = bivariate_adj_gbs$gen_adj_exp[2, ],
   text = TeX("${E_d^C}[X]$", output = "character")
 )
 
@@ -161,5 +161,60 @@ adj_exp_plot <- ggplot() +
   coord_fixed() +
   theme(panel.grid.minor = element_blank())
 
-  adj_exp_plot
+  cadj_exp_plot <- ggplot() +
+  geom_rect(
+    aes(xmin = 0, xmax = x_max, ymin = 0, ymax = y_max),
+    fill = "#d8d8d8"
+  ) +
+  geom_vline(aes(xintercept = 0), alpha = 0.5) +
+  geom_hline(aes(yintercept = 0), alpha = 0.5) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      1, bivariate_adj_bs$adj_exp, bivariate_adj_bs$adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.8 * 0.5
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      2, bivariate_adj_bs$adj_exp, bivariate_adj_bs$adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.5 * 0.5
+  ) +
+  geom_point(
+    data = cadj_exp_text,
+    aes(x = x, y = y)
+  ) +
+  geom_text(
+    data = cadj_exp_text,
+    aes(x = x, y = y + 0.7, label = text),
+    parse = TRUE
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      1, bivariate_adj_gbs$gen_adj_exp, bivariate_adj_gbs$gen_adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.8
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      2, bivariate_adj_gbs$gen_adj_exp, bivariate_adj_gbs$gen_adj_var
+    ),
+    aes(x = x, y = y), alpha = 0.5
+  ) +
+  geom_line(data = x_axis, aes(x = V1, y = V2), size = 1) +
+  geom_line(data = y_axis, aes(x = V1, y = V2), size = 1) +
+  scale_x_continuous(
+    TeX("$X_1$"),
+    limits = c(-1.5, 3.5),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(
+    TeX("$X_2$"),
+    limits = c(-3.5, 1.5),
+    expand = c(0, 0)
+  ) +
+  coord_fixed() +
+  theme(panel.grid.minor = element_blank())
+
+adj_exp_plot + cadj_exp_plot
 ```
