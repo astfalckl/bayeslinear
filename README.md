@@ -155,16 +155,4 @@ We recreate Figure 1 from PAPER using the results above. We note that
 the code from the displayed <tt>README</tt> on GitHub. Please consult
 the source file for all plotting code used.
 
-    #> Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if
-    #> `.name_repair` is omitted as of tibble 2.0.0.
-    #> ℹ Using compatibility `.name_repair`.
-    #> This warning is displayed once every 8 hours.
-    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    #> generated.
-    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    #> ℹ Please use `linewidth` instead.
-    #> This warning is displayed once every 8 hours.
-    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    #> generated.
-
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="80%" />
