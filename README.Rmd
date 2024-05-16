@@ -98,7 +98,7 @@ bivariate_adj_gbs
 
 We recreate Figure 1 from PAPER using the results above. We note that <tt>ggplot</tt> has a habit of being very verbose, and so we have hidden the code from the displayed <tt>README</tt> on GitHub. Please consult the source file for all plotting code used.
 
-```{r, echo = FALSE, warning = FALSE}
+```{r, echo = FALSE, warning = FALSE, fig.width = 7}
 adj_exp_text <- tibble(
   x = bivariate_adj_bs$adj_exp[1, ],
   y = bivariate_adj_bs$adj_exp[2, ],
