@@ -216,5 +216,108 @@ adj_exp_plot <- ggplot() +
   coord_fixed() +
   theme(panel.grid.minor = element_blank())
 
-adj_exp_plot + cadj_exp_plot
+u <- svd(bivariate_adj_bs$adj_var)$u
+d <- sqrt(diag(svd(bivariate_adj_bs$adj_var)$d))
+Linv <- solve(u %*% d)
+
+x_axis <- t(Linv %*% matrix(c(x_max, 0, x_min, 0), nrow = 2)) %>%
+    as_tibble()
+
+y_axis <- t(Linv %*% matrix(c(0, 1.79, 0, y_min), nrow = 2)) %>%
+    as_tibble()
+
+polygon <- t(
+  Linv %*% matrix(c(0, 0, 0, 1.79, x_max, y_max, x_max, 0), nrow = 2)
+  ) %>%
+    as_tibble()
+
+x_min <- min(-x_axis$V1, -y_axis$V1)
+x_max <- max(-x_axis$V1, -y_axis$V1)
+y_min <- min(x_axis$V2, y_axis$V2)
+y_max <- max(x_axis$V2, y_axis$V2)
+
+polygon[3, 1] <- -x_max
+polygon[3, 2] <- y_max
+
+adj_z <- t(Linv %*% bivariate_adj_bs$adj_exp)
+gen_adj_z <- t(Linv %*% bivariate_adj_gbs$gen_adj_exp)
+
+adj_z_exp_text <- tibble(
+    x = adj_z[, 1],
+    y = adj_z[, 2],
+    text = TeX("${E_d}[Z]$", output = "character")
+)
+
+gen_adj_z_exp_text <- tibble(
+    x = gen_adj_z[, 1],
+    y = gen_adj_z[, 2],
+    text = TeX("${E_d^C}[Z]$", output = "character")
+)
+
+gen_adj_var_z <- t(solve(chol(bivariate_adj_bs$adj_var))) %*%
+  bivariate_adj_gbs$gen_adj_var %*%
+  solve(chol(bivariate_adj_bs$adj_var))
+
+morph_plot <- ggplot() +
+  geom_polygon(
+    data = polygon,
+    aes(x = -V1, y = V2),
+    fill = "#d8d8d8"
+  ) +
+  geom_vline(aes(xintercept = 0), alpha = 0.5) +
+  geom_hline(aes(yintercept = 0), alpha = 0.5) +
+  geom_line(data = x_axis, aes(x = -V1, y = V2), size = 1) +
+  geom_line(data = y_axis, aes(x = -V1, y = V2), size = 1) +
+  geom_point(data = as_tibble(adj_z), aes(x = -V1, y = V2)) +
+  geom_point(data = as_tibble(gen_adj_z), aes(x = -V1, y = V2)) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      1, adj_z, matrix(c(1, 0, 0, 1), nrow = 2)
+    ),
+    aes(x = -x, y = y), alpha = 0.8
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      2, adj_z, matrix(c(1, 0, 0, 1), nrow = 2)
+    ),
+    aes(x = -x, y = y), alpha = 0.2
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      1, gen_adj_z, gen_adj_var_z
+    ),
+    aes(x = -x, y = y), alpha = 0.8
+  ) +
+  geom_path(
+    data = bayeslinear::calc_ellipse(
+      2, gen_adj_z, gen_adj_var_z
+    ),
+    aes(x = -x, y = y), alpha = 0.5
+  ) +
+  scale_x_continuous(
+    TeX('$Z_1$'),
+    limits = c(x_min, x_max),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(
+    TeX('$Z_2$'),
+    limits = c(y_min, y_max),
+    expand = c(0, 0)
+  ) +
+  geom_text(
+    data = adj_z_exp_text,
+    aes(x = -x + 0.2, y = y - 0.6, label = text),
+    parse = TRUE
+  ) +
+  geom_text(
+    data = gen_adj_z_exp_text,
+    aes(x = -x + 0.2, y = y + 0.9, label = text),
+    parse = TRUE
+  ) +
+  coord_fixed() +
+  theme(
+    panel.grid.minor = element_blank()
+  )
+
+adj_exp_plot + cadj_exp_plot + morph_plot
 ```
