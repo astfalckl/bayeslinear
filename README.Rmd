@@ -321,3 +321,103 @@ morph_plot <- ggplot() +
 
 adj_exp_plot + cadj_exp_plot + morph_plot
 ```
+
+# Example - Monotone Regression
+
+We provide a further example with the <tt>cdiac</tt> data that ships with <tt>CVXR</tt>. The data contains Global Monthly and Annual Temperature Anomalies (degrees C, relative to the 1961-1990 mean) for years 1850-2015. This is plotted below.
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+data(cdiac)
+
+ggplot(cdiac) +
+  geom_point(aes(x = year, y = annual)) +
+  xlab("Years") +
+  ylab(TeX("Global Temperature Anomaly [$\\degree C$]"))
+```
+
+A traditional Bayes linear analysis would specify some prior belief structure and adjust by the data. For example
+
+```{r}
+n <- nrow(cdiac)
+x <- cdiac$year
+
+dist_mat <- as.matrix(dist(x))
+
+exp_x <- exp_d <- matrix(rep(0, n))
+
+var_x <- 0.3^2 * exp(-(dist_mat / 25)^2) + 1e-6 * diag(rep(1, n))
+cov_xd <- 0.3^2 * exp(-(dist_mat / 25)^2) + 1e-6 * diag(rep(1, n))
+var_d <- var_x + 0.1^2 * diag(rep(1, n))
+
+monotone <- belief_structure(exp_x, exp_d, cov_xd, var_x, var_d)
+
+d <- cdiac$annual
+
+monotone_adj <- adjust(monotone, d)
+```
+
+The result of this adjustment is shown in the left figure, below. We may wish to enforce the belief that the temperatures are monotonically increasing, as a response to monotonic changes in the anthromorphic forcings. We do this as shown.
+
+```{r}
+monotone_gbs <- gen_belief_structure(
+  exp_x, exp_d, cov_xd, var_x, var_d,
+  quote(list(CVXR::diff(gen_adj_exp) >= 0))
+)
+
+monotone_gen_adj <- adjust(monotone_gbs, d)
+```
+
+This result is shown on the right figure. As before, the plotting code is suppressed, consult the source files if this interests you.
+
+```{r, echo = FALSE}
+bl_plot <- tibble(
+  year = as.numeric(x),
+  adj_exp = as.numeric(monotone_adj$adj_exp),
+  adj_sd = sqrt(diag(monotone_adj$adj_var))
+) %>%
+ggplot() +
+  geom_point(data = cdiac, aes(x = year, y = annual)) +
+  geom_line(aes(x = year, y = adj_exp)) +
+  geom_ribbon(
+    aes(x = year, ymin = adj_exp - 2 * adj_sd, ymax = adj_exp + 2 * adj_sd),
+    alpha = 0.2
+  ) +
+  xlab("Years") +
+  ylab(TeX("Global Temperature Anomaly [$\\degree C$]")) +
+  ggtitle("Standard BL Inference")
+
+gbl_plot <- tibble(
+  year = as.numeric(x),
+  adj_exp = as.numeric(monotone_gen_adj$gen_adj_exp),
+  adj_sd = sqrt(diag(monotone_gen_adj$gen_adj_var))
+) %>%
+ggplot() +
+  geom_point(data = cdiac, aes(x = year, y = annual)) +
+  geom_line(aes(x = year, y = adj_exp)) +
+  geom_ribbon(
+    aes(x = year, ymin = adj_exp - 2 * adj_sd, ymax = adj_exp + 2 * adj_sd),
+    alpha = 0.2
+  ) +
+  xlab("Years") +
+  ylab(TeX("Global Temperature Anomaly [$\\degree C$]")) +
+  ggtitle("Generalised BL Inference")
+
+```
+
+### The boring stuff
+
+```{r}
+sessionInfo()
+
+```
+
+
+
+
+
+
+
+
+
+
+
