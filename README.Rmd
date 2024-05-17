@@ -402,6 +402,8 @@ ggplot() +
   ylab(TeX("Global Temperature Anomaly [$\\degree C$]")) +
   ggtitle("Generalised BL Inference")
 
+bl_plot + gbl_plot
+
 ```
 
 ### The boring stuff

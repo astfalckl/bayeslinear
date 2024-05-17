@@ -206,6 +206,8 @@ monotone_gen_adj <- adjust(monotone_gbs, d)
 This result is shown on the right figure. As before, the plotting code
 is suppressed, consult the source files if this interests you.
 
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="80%" />
+
 ### The boring stuff
 
 ``` r
